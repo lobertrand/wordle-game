@@ -100,6 +100,7 @@ const app = new Vue({
     },
   },
   mounted: async function () {
+    // Init dictionary
     const response = await fetch("./dictionary.txt");
     const text = await response.text();
     const words = text.toUpperCase().split("\n");
@@ -107,7 +108,12 @@ const app = new Vue({
     console.log(words.length + " english words loaded");
     this.wordToGuess = randomElement(words);
 
-    window.addEventListener("keydown", (event) => {
+    // Init hidden input
+    const hiddenInput = document.querySelector("#hidden-input");
+    hiddenInput.focus();
+
+    // Init keyboard events
+    hiddenInput.addEventListener("keydown", (event) => {
       if (event.key === "Backspace") {
         this.removeLastLetter();
       } else if (event.key === "Enter") {
