@@ -67,6 +67,7 @@ const app = new Vue({
     wordToGuess: null,
     input: new Word(),
     badInput: false,
+    inputZoneFocused: false,
     attemps: [],
   },
   methods: {
@@ -109,8 +110,14 @@ const app = new Vue({
     this.wordToGuess = randomElement(words);
 
     // Init hidden input
+
+    const inputZone = document.querySelector("#input-zone");
     const hiddenInput = document.querySelector("#hidden-input");
-    hiddenInput.focus();
+    inputZone.addEventListener("click", () => {
+      hiddenInput.focus();
+    });
+    hiddenInput.addEventListener("focus", () => this.inputZoneFocused = true);
+    hiddenInput.addEventListener("blur", () => this.inputZoneFocused = false);
 
     // Init keyboard events
     hiddenInput.addEventListener("keydown", (event) => {

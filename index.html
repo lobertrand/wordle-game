@@ -24,7 +24,7 @@
             >{{ letter.value }}</span
           >
         </div>
-        <div class="word">
+        <div class="word" id="input-zone" :class="inputZoneFocused ? 'focused' : ''">
           <span
             class="letter"
             :class="badInput ? 'bad-input' : ''"
