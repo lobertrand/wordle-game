@@ -121,6 +121,8 @@ const app = new Vue({
 
     // Init keyboard events
     hiddenInput.addEventListener("keydown", (event) => {
+      event.preventDefault();
+      
       if (event.key === "Backspace") {
         this.removeLastLetter();
       } else if (event.key === "Enter") {
