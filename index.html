@@ -15,13 +15,21 @@
         <div class="word" v-for="word in attemps">
           <span
             class="letter"
-            :class="letter.status === 'RIGHT_POSITION' ? 'right-pos' : letter.status === 'WRONG_POSITION' ? 'wrong-pos' : ''"
+            :class="
+                letter.status === 'RIGHT_POSITION' ? 'right-pos' 
+              : letter.status === 'WRONG_POSITION' ? 'wrong-pos'
+              : ''
+            "
             v-for="letter in word.letters"
             >{{ letter.value }}</span
           >
         </div>
         <div class="word">
-          <span class="letter" v-for="letter in input.letters">
+          <span
+            class="letter"
+            :class="badInput ? 'bad-input' : ''"
+            v-for="letter in input.letters"
+          >
             {{ letter.value }}
           </span>
         </div>

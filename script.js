@@ -66,6 +66,7 @@ const app = new Vue({
   data: {
     wordToGuess: null,
     input: new Word(),
+    badInput: false,
     attemps: [],
   },
   methods: {
@@ -87,6 +88,9 @@ const app = new Vue({
         }
         this.attemps.push(this.input);
         this.input = new Word();
+      } else {
+        this.badInput = true;
+        setTimeout(() => this.badInput = false, 500);
       }
     },
     inputLetter(ch) {

@@ -10,7 +10,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 40px;
+  margin: 40px 0;
 }
 
 .word {
@@ -27,6 +27,7 @@ body {
   line-height: 80px;
   border-radius: 10px;
   background-color: #1e293b;
+  transition: transform 0.1s, background-color 0.3s;
 }
 
 .letter.right-pos {
@@ -35,4 +36,9 @@ body {
 
 .letter.wrong-pos {
   background-color: #a16207;
+}
+
+.letter.bad-input {
+  background-color: #b91c1c;
+  transform: scale(1.05);
 }
