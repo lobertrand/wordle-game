@@ -72,7 +72,7 @@ const app = new Vue({
     removeLastLetter() {
       this.input.removeLastLetter();
     },
-    submitWord() {
+    submitWord(dictionary) {
       if (
         this.input.length === WORD_LENGTH &&
         dictionary.has(this.input.word)
@@ -107,7 +107,7 @@ const app = new Vue({
       if (event.key === "Backspace") {
         this.removeLastLetter();
       } else if (event.key === "Enter") {
-        this.submitWord();
+        this.submitWord(dictionary);
       } else if (event.key.length === 1) {
         this.inputLetter(event.key.toUpperCase());
       }
