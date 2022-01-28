@@ -7,7 +7,15 @@
     <title>Wordle Game</title>
     <script src="https://unpkg.com/vue"></script>
     <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="style.css" />
+    <script>
+      const noCacheStylesheet = (name) => {
+        const linkTag = document.createElement("link");
+        linkTag.rel = "stylesheet";
+        linkTag.href = `${name}?nocacheid=${Math.floor(Math.random() * 1e10)}`;
+        document.head.appendChild(linkTag);
+      };
+      noCacheStylesheet("style.css");
+    </script>
   </head>
   <body>
     <div id="app">
@@ -37,7 +45,11 @@
 
       <div class="keyboard">
         <div class="keyboard-row" v-for="keyboardRow in keyboard">
-          <button class="keyboard-key" v-for="keyboardKey in keyboardRow" v-on:click="inputLetter(keyboardKey)">
+          <button
+            class="keyboard-key"
+            v-for="keyboardKey in keyboardRow"
+            v-on:click="inputLetter(keyboardKey)"
+          >
             {{ keyboardKey }}
           </button>
         </div>
