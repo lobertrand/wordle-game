@@ -11,6 +11,8 @@
   </head>
   <body>
     <div id="app">
+      <input type="text" id="hidden-input" v-model="inputText">
+
       <div class="word-list">
         <div class="word" v-for="word in attemps">
           <span
@@ -32,9 +34,10 @@
           >
             {{ letter.value }}
           </span>
-          <input type="text" id="hidden-input">
         </div>
       </div>
+
+      <div>Input text : {{ inputText }}</div>
     </div>
     <script src="script.js"></script>
   </body>

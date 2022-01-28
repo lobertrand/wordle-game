@@ -68,6 +68,7 @@ const app = new Vue({
     input: new Word(),
     badInput: false,
     inputZoneFocused: false,
+    inputText: "",
     attemps: [],
   },
   methods: {
