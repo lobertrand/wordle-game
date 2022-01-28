@@ -113,16 +113,12 @@ const app = new Vue({
 
     const inputZone = document.querySelector("#input-zone");
     const hiddenInput = document.querySelector("#hidden-input");
-    inputZone.addEventListener("click", () => {
-      hiddenInput.focus();
-    });
+    inputZone.addEventListener("click", () => hiddenInput.focus());
     hiddenInput.addEventListener("focus", () => this.inputZoneFocused = true);
     hiddenInput.addEventListener("blur", () => this.inputZoneFocused = false);
 
     // Init keyboard events
-    window.addEventListener("keydown", (event) => {
-      event.preventDefault();
-      
+    window.addEventListener("keydown", (event) => {      
       if (event.key === "Backspace") {
         this.removeLastLetter();
       } else if (event.key === "Enter") {
