@@ -67,7 +67,15 @@ const app = new Vue({
     wordToGuess: null,
     input: new Word(),
     badInput: false,
-    attemps: [],
+    attemps: [
+      new Word("hello"),
+      new Word("hello"),
+      new Word("hello"),
+      new Word("hello"),
+      new Word("hello"),
+      new Word("hello"),
+      new Word("hello"),
+    ],
     keyboard: [
       'AZERTYUIOP',
       'QSDFGHJKLM',
