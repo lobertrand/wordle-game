@@ -11,7 +11,7 @@
   </head>
   <body>
     <div id="app">
-      <div class="word-list">
+      <div class="word-list" id="word-list">
         <div class="word" v-for="word in attemps">
           <span
             class="letter"
@@ -35,16 +35,15 @@
         </div>
       </div>
 
-      <div class="controls">
-        <button class="control" v-on:click="submitWord()">SUBMIT</button>
-        <button class="control" v-on:click="removeLastLetter()">DELETE</button>
-      </div>
-
       <div class="keyboard">
         <div class="keyboard-row" v-for="keyboardRow in keyboard">
           <button class="keyboard-key" v-for="keyboardKey in keyboardRow" v-on:click="inputLetter(keyboardKey)">
             {{ keyboardKey }}
           </button>
+        </div>
+        <div class="buttons">
+          <button class="button" v-on:click="removeLastLetter()">DELETE</button>
+          <button class="button" v-on:click="submitWord()">SUBMIT</button>
         </div>
       </div>
     </div>

@@ -71,7 +71,7 @@ const app = new Vue({
     keyboard: [
       'AZERTYUIOP',
       'QSDFGHJKLM',
-      'WXCVBN'  
+      'WXCVBN'
     ],
     dictionary: new Set(),
   },
@@ -98,6 +98,12 @@ const app = new Vue({
         this.badInput = true;
         setTimeout(() => this.badInput = false, 500);
       }
+      this.$nextTick(() => this.scrollToEnd());
+    },
+    scrollToEnd() {
+      const wordList = this.$el.querySelector("#word-list");
+      console.log("Word list element : ", wordList)
+      wordList.scrollTop = wordList.scrollHeight;
     },
     inputLetter(ch) {
       if (isCapitalLetter(ch)) {
@@ -115,11 +121,11 @@ const app = new Vue({
     this.wordToGuess = randomElement(words);
 
     // Init keyboard events
-    window.addEventListener("keydown", (event) => {      
+    window.addEventListener("keydown", (event) => {
       if (event.key === "Backspace") {
         this.removeLastLetter();
       } else if (event.key === "Enter") {
-        this.submitWord(dictionary);
+        this.submitWord();
       } else if (event.key.length === 1) {
         this.inputLetter(event.key.toUpperCase());
       }

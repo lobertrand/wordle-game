@@ -1,22 +1,38 @@
+body {
+  --bg-color: #0f172a;
+  --default-color: #1e293b;
+  --success-color: #166534;
+  --warning-color: #a16207;
+  --danger-color: #7f1d1d;
+
+  --letter-font-size: 38px;
+  --button-font-size: 24px;
+}
+
 #app {
+  width: 100vw;
+  max-width: 500px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 
 body {
   display: flex;
   justify-content: center;
-  background-color: #0f172a;
+  background-color: var(--bg-color);
   color: #f8fafc;
-  font-family: "Courier New", Courier, monospace;
+  font-family: system-ui, sans-serif;
 }
 
 .word-list {
   display: flex;
   flex-direction: column;
-  margin: 30px 0;
+  margin: 20px 0;
   width: 100%;
+  overflow-y: auto;
 }
 
 .word {
@@ -32,29 +48,29 @@ body {
   justify-content: center;
   border: 5px solid rgba(255, 255, 255, 0.05);
   width: 13%;
-  height: 70px;
-  font-size: 45px;
+  height: 64px;
+  font-size: var(--letter-font-size);
   border-radius: 10px;
-  background-color: #1e293b;
+  background-color: var(--default-color);
   transition: transform 0.1s, background-color 0.3s;
 }
 
 .letter.right-pos {
-  background-color: #166534;
+  background-color: var(--success-color);
 }
 
 .letter.wrong-pos {
-  background-color: #a16207;
+  background-color: var(--warning-color);
 }
 
 .letter.bad-input {
-  background-color: #b91c1c;
+  background-color: var(--danger-color);
   transform: scale(1.05);
 }
 
 .keyboard {
-  width: 100vw;
-  max-width: 500px;
+  width: 100%;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,37 +89,37 @@ body {
   align-items: center;
   justify-content: center;
   border: none;
-  /* border: 2px solid #0f172a; */
   outline: none;
   color: white;
   font-family: inherit;
-  font-size: 24px;
-  width: 9%;
+  font-size: var(--button-font-size);
+  width: 8.8%;
   height: 50px;
   border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--default-color);
   cursor: pointer;
 }
 
-.controls {
+.buttons {
   display: flex;
   width: 100%;
   justify-content: space-evenly;
-  margin-bottom: 20px;
+  margin-top: 10px;
 }
 
-.control {
+.button {
+  letter-spacing: 0.1em;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 15px;
   border: none;
   outline: none;
   color: white;
   font-family: inherit;
-  font-size: 24px;
-  height: 50px;
+  font-size: var(--button-font-size);
+  height: 45px;
   border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--default-color);
   cursor: pointer;
 }
