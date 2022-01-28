@@ -120,7 +120,7 @@ const app = new Vue({
     hiddenInput.addEventListener("blur", () => this.inputZoneFocused = false);
 
     // Init keyboard events
-    hiddenInput.addEventListener("keydown", (event) => {
+    window.addEventListener("keydown", (event) => {
       event.preventDefault();
       
       if (event.key === "Backspace") {

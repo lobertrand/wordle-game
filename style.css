@@ -54,13 +54,6 @@ body {
 }
 
 #hidden-input {
-  background-color: transparent;
-  color: transparent;
-  border: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  outline: none;
+  position: fixed;
+  top: -200%;
 }
