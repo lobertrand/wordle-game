@@ -24,7 +24,7 @@
             >{{ letter.value }}</span
           >
         </div>
-        <div class="word" id="input-zone" :class="inputZoneFocused ? 'focused' : ''">
+        <div class="word" id="input-zone">
           <span
             class="letter"
             :class="badInput ? 'bad-input' : ''"
@@ -34,10 +34,19 @@
           </span>
         </div>
       </div>
-      
-      <input type="text" id="hidden-input" v-model="inputText">
-      <div>Input text : {{ inputText }}</div>
-      
+
+      <div class="controls">
+        <button class="control" v-on:click="submitWord()">SUBMIT</button>
+        <button class="control" v-on:click="removeLastLetter()">DELETE</button>
+      </div>
+
+      <div class="keyboard">
+        <div class="keyboard-row" v-for="keyboardRow in keyboard">
+          <button class="keyboard-key" v-for="keyboardKey in keyboardRow" v-on:click="inputLetter(keyboardKey)">
+            {{ keyboardKey }}
+          </button>
+        </div>
+      </div>
     </div>
     <script src="script.js"></script>
   </body>

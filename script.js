@@ -67,18 +67,22 @@ const app = new Vue({
     wordToGuess: null,
     input: new Word(),
     badInput: false,
-    inputZoneFocused: false,
-    inputText: "",
     attemps: [],
+    keyboard: [
+      'AZERTYUIOP',
+      'QSDFGHJKLM',
+      'WXCVBN'  
+    ],
+    dictionary: new Set(),
   },
   methods: {
     removeLastLetter() {
       this.input.removeLastLetter();
     },
-    submitWord(dictionary) {
+    submitWord() {
       if (
         this.input.length === WORD_LENGTH &&
-        dictionary.has(this.input.word)
+        this.dictionary.has(this.input.word)
       ) {
         for (let i = 0; i < WORD_LENGTH; i++) {
           this.input.letters[i].status =
@@ -106,17 +110,9 @@ const app = new Vue({
     const response = await fetch("./dictionary.txt");
     const text = await response.text();
     const words = text.toUpperCase().split("\n");
-    const dictionary = new Set(words);
+    this.dictionary = new Set(words);
     console.log(words.length + " english words loaded");
     this.wordToGuess = randomElement(words);
-
-    // Init hidden input
-
-    const inputZone = document.querySelector("#input-zone");
-    const hiddenInput = document.querySelector("#hidden-input");
-    inputZone.addEventListener("click", () => hiddenInput.focus());
-    hiddenInput.addEventListener("focus", () => this.inputZoneFocused = true);
-    hiddenInput.addEventListener("blur", () => this.inputZoneFocused = false);
 
     // Init keyboard events
     window.addEventListener("keydown", (event) => {      
