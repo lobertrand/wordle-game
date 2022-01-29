@@ -1,3 +1,5 @@
+/* VARIABLES */
+
 body {
   --bg-color: #0f172a;
   --default-color: #1e293b;
@@ -5,8 +7,35 @@ body {
   --warning-color: #a16207;
   --danger-color: #7f1d1d;
 
+  --letter-border-width: 5px;
   --letter-font-size: 38px;
   --button-font-size: 24px;
+}
+
+@media screen and (max-width: 400px) {
+  body {
+    --letter-border-width: 3px;
+    --letter-font-size: 28px;
+    --button-font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  body {
+    --letter-border-width: 2px;
+    --letter-font-size: 22px;
+    --button-font-size: 16px;
+  }
+}
+
+/* APP CONTAINER */
+
+body {
+  display: flex;
+  justify-content: center;
+  background-color: var(--bg-color);
+  color: #f8fafc;
+  font-family: system-ui, sans-serif;
 }
 
 #app {
@@ -19,13 +48,7 @@ body {
   justify-content: space-between;
 }
 
-body {
-  display: flex;
-  justify-content: center;
-  background-color: var(--bg-color);
-  color: #f8fafc;
-  font-family: system-ui, sans-serif;
-}
+/* WORD LIST */
 
 .word-list {
   display: flex;
@@ -43,13 +66,22 @@ body {
   margin-bottom: 3%;
 }
 
+.letter-wrapper {
+  width: 15%;
+  padding-top: 15%;
+  position: relative;
+}
+
 .letter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 5px solid rgba(255, 255, 255, 0.05);
-  width: 13%;
-  height: 64px;
+  border: var(--letter-border-width) solid rgba(255, 255, 255, 0.05);
   font-size: var(--letter-font-size);
   border-radius: 10px;
   background-color: var(--default-color);
@@ -69,9 +101,14 @@ body {
   transform: scale(1.05);
 }
 
-.keyboard {
+/* BOTTOM SHEET */
+
+.bottom-sheet {
   width: 100%;
   padding-bottom: 20px;
+}
+
+.keyboard {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,42 +122,56 @@ body {
   margin-bottom: 1%;
 }
 
-.keyboard-key {
+.button {
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   outline: none;
-  color: white;
   font-family: inherit;
   font-size: var(--button-font-size);
-  width: 8.8%;
-  height: 50px;
-  border-radius: 8px;
+  color: white;
   background-color: var(--default-color);
+  border-radius: 8px;
   cursor: pointer;
+  height: 50px;
 }
 
-.buttons {
+.keyboard .button {
+  width: 8.8%;
+}
+
+.controls {
   display: flex;
   width: 100%;
   justify-content: space-evenly;
   margin-top: 10px;
 }
 
-.button {
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.controls .button {
   padding: 0 15px;
-  border: none;
-  outline: none;
-  color: white;
-  font-family: inherit;
-  font-size: var(--button-font-size);
-  height: 45px;
-  border-radius: 8px;
+  letter-spacing: 0.1em;
+}
+
+/* SCROLLBARS */
+/* https://www.digitalocean.com/community/tutorials/css-scrollbars */
+
+/* Works on Firefox */
+* {
+  scrollbar-color: var(--default-color) var(--bg-color);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
   background-color: var(--default-color);
-  cursor: pointer;
+  border-radius: 20px;
+  border: 2px solid var(--bg-color);
 }

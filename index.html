@@ -21,39 +21,37 @@
     <div id="app">
       <div class="word-list" id="word-list">
         <div class="word" v-for="word in attemps">
-          <span
-            class="letter"
-            :class="
-                letter.status === 'RIGHT_POSITION' ? 'right-pos' 
-              : letter.status === 'WRONG_POSITION' ? 'wrong-pos'
-              : ''
-            "
-            v-for="letter in word.letters"
-            >{{ letter.value }}</span
+          <span class="letter-wrapper" v-for="letter in word.letters"
+            ><span
+              class="letter"
+              :class="letter.status === 'RIGHT_POSITION' ? 'right-pos' 
+                : letter.status === 'WRONG_POSITION' ? 'wrong-pos' : ''"
+              >{{ letter.value }}</span
+            ></span
           >
         </div>
         <div class="word" id="input-zone">
-          <span
-            class="letter"
-            :class="badInput ? 'bad-input' : ''"
-            v-for="letter in input.letters"
-          >
-            {{ letter.value }}
+          <span class="letter-wrapper" v-for="letter in input.letters">
+            <span class="letter" :class="badInput ? 'bad-input' : ''"
+              >{{ letter.value }}</span
+            >
           </span>
         </div>
       </div>
 
-      <div class="keyboard">
-        <div class="keyboard-row" v-for="keyboardRow in keyboard">
-          <button
-            class="keyboard-key"
-            v-for="keyboardKey in keyboardRow"
-            v-on:click="inputLetter(keyboardKey)"
-          >
-            {{ keyboardKey }}
-          </button>
+      <div class="bottom-sheet">
+        <div class="keyboard">
+          <div class="keyboard-row" v-for="keyboardRow in keyboard">
+            <button
+              class="button"
+              v-for="keyboardKey in keyboardRow"
+              v-on:click="inputLetter(keyboardKey)"
+            >
+              {{ keyboardKey }}
+            </button>
+          </div>
         </div>
-        <div class="buttons">
+        <div class="controls">
           <button class="button" v-on:click="removeLastLetter()">DELETE</button>
           <button class="button" v-on:click="submitWord()">SUBMIT</button>
         </div>
