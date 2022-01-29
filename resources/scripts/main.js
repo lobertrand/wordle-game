@@ -104,11 +104,11 @@ class Word {
 const app = new Vue({
   el: "#app",
   data: {
+    dictionary: new Set(),
     wordToGuess: null,
     input: new Word(),
-    badInput: false,
     attemps: [],
-    dictionary: new Set(),
+    badInput: false,
     settings: {
       open: false,
       language: "en",
@@ -182,6 +182,8 @@ const app = new Vue({
       this.dictionary = new Set(words);
       console.log(`${words.length} words loaded for language '${this.settings.language}'`);
       this.wordToGuess = randomElement(words);
+      this.attemps = [];
+      this.input = new Word();
     }
   },
   computed: {
