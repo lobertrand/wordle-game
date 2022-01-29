@@ -3,8 +3,10 @@
     
   fr : - French words by order of frequency
          https://fr.wiktionary.org/wiki/Utilisateur:Darkdadaah/Listes/Mots_dump/frwiki/2016-02-03
-       - All French words [currently used (filtered)]
+       - All French words
          https://www.freelang.com/dictionnaire/dic-francais.php
+       - ~336000 French words [currently used (filtered)]
+         https://raw.githubusercontent.com/words/an-array-of-french-words/master/index.json
 
   en : - Most frequently used words
          https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt
