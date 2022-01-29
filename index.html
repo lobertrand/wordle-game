@@ -57,7 +57,7 @@
             :title="i18n('game.settings')"
             v-on:click="settings.open = true"
           >
-            <img src="icons/settings.svg" aria-hidden="true" />
+            <img src="resources/icons/settings.svg" aria-hidden="true" />
           </button>
           <button
             class="btn submit-btn"
@@ -65,75 +65,77 @@
             v-on:click="submitWord()"
           >
             <span>{{ i18n('game.submit') }}</span>
-            <img src="icons/check.svg" aria-hidden="true" />
+            <img src="resources/icons/check.svg" aria-hidden="true" />
           </button>
           <button
             class="btn erase-btn"
             :title="i18n('game.erase')"
             v-on:click="removeLastLetter()"
           >
-            <img src="icons/backspace.svg" aria-hidden="true" />
+            <img src="resources/icons/backspace.svg" aria-hidden="true" />
           </button>
         </div>
       </div>
 
       <div class="settings-overlay" :class="settings.open ? 'open' : ''">
-        <section class="settings-section">
-          <h2>{{ i18n('settings.language') }}</h2>
-          <div class="radio-btn">
-            <input
-              id="language-english"
-              type="radio"
-              name="language"
-              value="en"
-              v-model="settings.language"
-            />
-            <label for="language-english">English</label>
-          </div>
-          <div class="radio-btn">
-            <input
-              id="language-french"
-              type="radio"
-              name="language"
-              value="fr"
-              v-model="settings.language"
-            />
-            <label for="language-french">Français</label>
-          </div>
-        </section>
-        <section class="settings-section">
-          <h2>{{ i18n('settings.keyboardLayout') }}</h2>
-          <div class="radio-btn">
-            <input
-              id="keyboard-layout-qwerty"
-              type="radio"
-              name="keyboard-layout"
-              value="QWERTY"
-              v-model="settings.keyboardLayout"
-            />
-            <label for="keyboard-layout-qwerty">Qwerty</label>
-          </div>
-          <div class="radio-btn">
-            <input
-              id="keyboard-layout-azerty"
-              type="radio"
-              name="keyboard-layout"
-              value="AZERTY"
-              v-model="settings.keyboardLayout"
-            />
-            <label for="keyboard-layout-azerty">Azerty</label>
-          </div>
-        </section>
-        <section class="settings-section mt-lg">
-          <button
-            class="btn"
-            :title="i18n('settings.close')"
-            v-on:click="settings.open = false"
-          >
-            <span>{{ i18n('settings.close') }}</span>
-            <img src="icons/close.svg" aria-hidden="true" />
-          </button>
-        </section>
+        <div class="settings-content">
+          <section class="settings-section">
+            <h2>{{ i18n('settings.language') }}</h2>
+            <div class="radio-btn">
+              <input
+                id="language-english"
+                type="radio"
+                name="language"
+                value="en"
+                v-model="settings.language"
+              />
+              <label for="language-english">English</label>
+            </div>
+            <div class="radio-btn">
+              <input
+                id="language-french"
+                type="radio"
+                name="language"
+                value="fr"
+                v-model="settings.language"
+              />
+              <label for="language-french">Français</label>
+            </div>
+          </section>
+          <section class="settings-section">
+            <h2>{{ i18n('settings.keyboardLayout') }}</h2>
+            <div class="radio-btn">
+              <input
+                id="keyboard-layout-qwerty"
+                type="radio"
+                name="keyboard-layout"
+                value="QWERTY"
+                v-model="settings.keyboardLayout"
+              />
+              <label for="keyboard-layout-qwerty">Qwerty</label>
+            </div>
+            <div class="radio-btn">
+              <input
+                id="keyboard-layout-azerty"
+                type="radio"
+                name="keyboard-layout"
+                value="AZERTY"
+                v-model="settings.keyboardLayout"
+              />
+              <label for="keyboard-layout-azerty">Azerty</label>
+            </div>
+          </section>
+          <section class="settings-section mt-lg">
+            <button
+              class="btn"
+              :title="i18n('settings.close')"
+              v-on:click="settings.open = false"
+            >
+              <span>{{ i18n('settings.close') }}</span>
+              <img src="resources/icons/close.svg" aria-hidden="true" />
+            </button>
+          </section>
+        </div>
       </div>
     </div>
     <script src="script.js"></script>

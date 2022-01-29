@@ -185,7 +185,7 @@ const app = new Vue({
     this.settings.keyboardLayout = keyboardLayout in Keyboard ? keyboardLayout : "AZERTY";
 
     // Init dictionary
-    const response = await fetch("./dictionary.txt");
+    const response = await fetch("./resources/dictionary.txt");
     const text = await response.text();
     const words = text.toUpperCase().split("\n");
     this.dictionary = new Set(words);
