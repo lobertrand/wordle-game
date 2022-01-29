@@ -178,6 +178,12 @@ const app = new Vue({
     }
   },
   mounted: async function () {
+    // Load user preferences
+    const language = localStorage.getItem("userSettings.language");
+    const keyboardLayout = localStorage.getItem("userSettings.keyboardLayout");
+    this.settings.language = language in Translations ? language : "fr";
+    this.settings.keyboardLayout = keyboardLayout in Keyboard ? keyboardLayout : "AZERTY";
+
     // Init dictionary
     const response = await fetch("./dictionary.txt");
     const text = await response.text();
@@ -197,4 +203,11 @@ const app = new Vue({
       }
     });
   },
+});
+
+app.$watch('settings.language', (newVal) => {
+  localStorage.setItem("userSettings.language", newVal);
+});
+app.$watch('settings.keyboardLayout', (newVal) => {
+  localStorage.setItem("userSettings.keyboardLayout", newVal);
 });
