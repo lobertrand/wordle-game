@@ -2,10 +2,11 @@
 
 body {
   --bg-color: #0f172a;
-  --default-color: #1e293b;
-  --success-color: #166534;
-  --warning-color: #a16207;
-  --danger-color: #7f1d1d;
+  --default-color: #334155;
+  --default-pressed-color: #1e293b;
+  --success-color: #4d7c0f;
+  --warning-color: #b45309;
+  --danger-color: #b91c1c;
 
   --letter-border-width: 5px;
   --letter-font-size: 38px;
@@ -139,12 +140,14 @@ body {
   cursor: pointer;
   height: var(--button-height);
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
-  -webkit-tap-highlight-color:transparent
+  -webkit-tap-highlight-color:transparent;
+  user-select: none;
 }
 
 .button:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  background-color: var(--default-pressed-color);
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .keyboard .button {
