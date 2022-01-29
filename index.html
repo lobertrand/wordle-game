@@ -43,7 +43,7 @@
         <div class="keyboard">
           <div class="keyboard-row" v-for="keyboardRow in keyboard">
             <button
-              class="button"
+              class="btn"
               v-for="keyboardKey in keyboardRow"
               v-on:click="inputLetter(keyboardKey)"
             >
@@ -51,10 +51,49 @@
             </button>
           </div>
         </div>
-        <div class="controls">
-          <button class="button" v-on:click="removeLastLetter()">DELETE</button>
-          <button class="button" v-on:click="submitWord()">SUBMIT</button>
+        <div class="game-controls">
+          <button
+            class="btn settings-btn"
+            title="Settings"
+            v-on:click="settingsOpen = true"
+          >
+            <img src="icons/settings.svg" aria-hidden="true" />
+          </button>
+          <button
+            class="btn submit-btn"
+            v-on:click="submitWord()"
+            title="Submit"
+          >
+            <span>Submit</span>
+            <img src="icons/check.svg" aria-hidden="true" />
+          </button>
+          <button
+            class="btn delete-btn"
+            v-on:click="removeLastLetter()"
+            title="Delete"
+          >
+            <img src="icons/backspace.svg" aria-hidden="true" />
+          </button>
         </div>
+      </div>
+
+      <div class="settings-overlay" :class="settingsOpen ? 'open' : ''">
+        <section class="settings-section">
+          <h2>Language</h2>
+          <button class="btn">Français</button>
+          <button class="btn">English</button>
+        </section>
+        <section class="settings-section">
+          <h2>Keyboard</h2>
+          <button class="btn">Azerty</button>
+          <button class="btn">Qwerty</button>
+        </section>
+        <section class="settings-section mt-xl">
+          <button class="btn" title="Close" v-on:click="settingsOpen = false">
+            <span>Close settings</span>
+            <img src="icons/close.svg" aria-hidden="true" />
+          </button>
+        </section>
       </div>
     </div>
     <script src="script.js"></script>

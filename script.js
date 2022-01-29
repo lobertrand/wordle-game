@@ -74,6 +74,7 @@ const app = new Vue({
       'WXCVBN'
     ],
     dictionary: new Set(),
+    settingsOpen: false,
   },
   methods: {
     removeLastLetter() {

@@ -10,16 +10,16 @@ body {
 
   --letter-border-width: 5px;
   --letter-font-size: 38px;
-  --button-height: 50px;
-  --button-font-size: 24px;
+  --btn-size: 50px;
+  --btn-font-size: 24px;
 }
 
 @media screen and (max-width: 400px) {
   body {
     --letter-border-width: 3px;
     --letter-font-size: 28px;
-    --button-height: 45px;
-    --button-font-size: 20px;
+    --btn-size: 45px;
+    --btn-font-size: 20px;
   }
 }
 
@@ -27,9 +27,38 @@ body {
   body {
     --letter-border-width: 2px;
     --letter-font-size: 22px;
-    --button-height: 40px;
-    --button-font-size: 16px;
+    --btn-size: 40px;
+    --btn-font-size: 16px;
   }
+}
+
+/* UTILITY CLASSES */
+
+.mt-xl {
+  margin-top: 64px;
+}
+
+/* SCROLLBARS */
+/* https://www.digitalocean.com/community/tutorials/css-scrollbars */
+
+/* Works on Firefox */
+* {
+  scrollbar-color: var(--default-color) var(--bg-color);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--default-color);
+  border-radius: 20px;
+  border: 2px solid var(--bg-color);
 }
 
 /* APP CONTAINER */
@@ -126,65 +155,74 @@ body {
   margin-bottom: 1%;
 }
 
-.button {
+.btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: calc(var(--btn-size) * 0.1);
   border: none;
   outline: none;
   font-family: inherit;
-  font-size: var(--button-font-size);
+  font-size: var(--btn-font-size);
   color: white;
   background-color: var(--default-color);
   border-radius: 8px;
   cursor: pointer;
-  height: var(--button-height);
+  height: var(--btn-size);
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
-  -webkit-tap-highlight-color:transparent;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
-.button:active {
+.btn:active {
   background-color: var(--default-pressed-color);
   transform: translateY(1px);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
 }
 
-.keyboard .button {
+.keyboard .btn {
   width: 8.8%;
 }
 
-.controls {
+.game-controls {
   display: flex;
   width: 100%;
   justify-content: space-evenly;
   margin-top: 10px;
 }
 
-.controls .button {
-  padding: 0 calc(var(--button-height) * 0.3);
-  letter-spacing: 0.05em;
+.game-controls .btn {
+  padding: 0 calc(var(--btn-size) * 0.3);
+  min-width: var(--btn-size);
 }
 
-/* SCROLLBARS */
-/* https://www.digitalocean.com/community/tutorials/css-scrollbars */
+/* SETTINGS OVERLAY */
 
-/* Works on Firefox */
-* {
-  scrollbar-color: var(--default-color) var(--bg-color);
+.settings-overlay {
+  display: none;
 }
 
-/* Works on Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 12px;
+.settings-overlay.open {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
 }
 
-*::-webkit-scrollbar-track {
-  background: transparent;
+.settings-overlay .settings-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-*::-webkit-scrollbar-thumb {
-  background-color: var(--default-color);
-  border-radius: 20px;
-  border: 2px solid var(--bg-color);
+.settings-overlay .btn {
+  padding: 0 calc(var(--btn-size) * 0.3);
 }
