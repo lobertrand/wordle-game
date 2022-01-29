@@ -9,6 +9,7 @@ body {
 
   --letter-border-width: 5px;
   --letter-font-size: 38px;
+  --button-height: 50px;
   --button-font-size: 24px;
 }
 
@@ -16,6 +17,7 @@ body {
   body {
     --letter-border-width: 3px;
     --letter-font-size: 28px;
+    --button-height: 45px;
     --button-font-size: 20px;
   }
 }
@@ -24,6 +26,7 @@ body {
   body {
     --letter-border-width: 2px;
     --letter-font-size: 22px;
+    --button-height: 40px;
     --button-font-size: 16px;
   }
 }
@@ -134,7 +137,14 @@ body {
   background-color: var(--default-color);
   border-radius: 8px;
   cursor: pointer;
-  height: 50px;
+  height: var(--button-height);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+  -webkit-tap-highlight-color:transparent
+}
+
+.button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
 .keyboard .button {
@@ -149,8 +159,8 @@ body {
 }
 
 .controls .button {
-  padding: 0 15px;
-  letter-spacing: 0.1em;
+  padding: 0 calc(var(--button-height) * 0.3);
+  letter-spacing: 0.05em;
 }
 
 /* SCROLLBARS */
