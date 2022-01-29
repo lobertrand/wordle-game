@@ -6,16 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wordle Game</title>
     <script src="https://unpkg.com/vue"></script>
-    <link rel="stylesheet" href="reset.css" />
-    <script>
-      const noCacheStylesheet = (name) => {
-        const linkTag = document.createElement("link");
-        linkTag.rel = "stylesheet";
-        linkTag.href = `${name}?nocacheid=${Math.floor(Math.random() * 1e10)}`;
-        document.head.appendChild(linkTag);
-      };
-      noCacheStylesheet("style.css");
-    </script>
+    <link rel="stylesheet" href="resources/stylesheets/reset.css?version=1" />
+    <link rel="stylesheet" href="resources/stylesheets/style.css?version=1" />
   </head>
   <body>
     <div id="app">
@@ -138,6 +130,6 @@
         </div>
       </div>
     </div>
-    <script src="script.js"></script>
+    <script src="resources/scripts/main.js"></script>
   </body>
 </html>

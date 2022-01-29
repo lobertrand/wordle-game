@@ -33,16 +33,6 @@ body {
   }
 }
 
-/* UTILITY CLASSES */
-
-.mt-xl {
-  margin-top: 64px;
-}
-
-.mt-lg {
-  margin-top: 48px;
-}
-
 /* SCROLLBARS */
 /* https://www.digitalocean.com/community/tutorials/css-scrollbars */
 
@@ -220,7 +210,7 @@ body {
   bottom: 0;
   right: 0;
   z-index: 1;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .settings-content {
@@ -230,14 +220,13 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 30px;
+  gap: 36px;
   padding: 20px;
 }
 
 .settings-overlay .settings-section {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   gap: 8px;
 }
 
@@ -250,9 +239,6 @@ body {
   text-align: center;
   font-weight: bold;
   font-size: var(--btn-font-size);
-}
-
-.radio-btn {
 }
 
 .radio-btn input {
@@ -268,6 +254,8 @@ body {
   border-radius: 100px;
   border: 1px solid var(--default-color);
   text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .radio-btn input:checked + label {

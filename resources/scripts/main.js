@@ -171,6 +171,18 @@ const app = new Vue({
       }
       return result ? result : property;
     },
+    reloadWords: async function() {
+      if (!['fr', 'en'].includes(this.settings.language)) {
+        console.log(`Cannot load words for unsuported language: '${this.settings.language}'`);
+        return;
+      }
+      const response = await fetch(`./resources/words/words-${this.settings.language}-5.txt`);
+      const text = await response.text();
+      const words = text.toUpperCase().split("\n");
+      this.dictionary = new Set(words);
+      console.log(`${words.length} words loaded for language '${this.settings.language}'`);
+      this.wordToGuess = randomElement(words);
+    }
   },
   computed: {
     keyboard() {
@@ -185,12 +197,7 @@ const app = new Vue({
     this.settings.keyboardLayout = keyboardLayout in Keyboard ? keyboardLayout : "AZERTY";
 
     // Init dictionary
-    const response = await fetch("./resources/dictionary.txt");
-    const text = await response.text();
-    const words = text.toUpperCase().split("\n");
-    this.dictionary = new Set(words);
-    console.log(words.length + " english words loaded");
-    this.wordToGuess = randomElement(words);
+    await this.reloadWords();
 
     // Init keyboard events
     window.addEventListener("keydown", (event) => {
@@ -207,6 +214,7 @@ const app = new Vue({
 
 app.$watch('settings.language', (newVal) => {
   localStorage.setItem("userSettings.language", newVal);
+  app.reloadWords();
 });
 app.$watch('settings.keyboardLayout', (newVal) => {
   localStorage.setItem("userSettings.keyboardLayout", newVal);
