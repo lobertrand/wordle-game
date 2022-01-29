@@ -8,6 +8,46 @@ const randomElement = (arr) => {
   return arr[index];
 };
 
+const Translations = {
+  en: {
+    game: {
+      settings: "Settings",
+      submit: "Submit",
+      erase: "Erase",
+    },
+    settings: {
+      language: "Language",
+      keyboardLayout: "Keyboard layout",
+      close: "Close settings",
+    }
+  },
+  fr: {
+    game: {
+      settings: "Paramètres",
+      submit: "Envoyer",
+      erase: "Effacer",
+    },
+    settings: {
+      language: "Langue",
+      keyboardLayout: "Disposition du clavier",
+      close: "Fermer les paramètres",
+    }
+  },
+}
+
+const Keyboard = {
+  AZERTY: [
+    'AZERTYUIOP',
+    'QSDFGHJKLM',
+    'WXCVBN',
+  ],
+  QWERTY: [
+    'QWERTYUIOP',
+    'ASDFGHJKL',
+    'ZXCVBNM',
+  ]
+}
+
 const Status = {
   ABSENT: "ABSENT",
   WRONG_POSITION: "WRONG_POSITION",
@@ -68,13 +108,12 @@ const app = new Vue({
     input: new Word(),
     badInput: false,
     attemps: [],
-    keyboard: [
-      'AZERTYUIOP',
-      'QSDFGHJKLM',
-      'WXCVBN'
-    ],
     dictionary: new Set(),
-    settingsOpen: false,
+    settings: {
+      open: false,
+      language: "en",
+      keyboardLayout: "AZERTY",
+    }
   },
   methods: {
     removeLastLetter() {
@@ -103,7 +142,6 @@ const app = new Vue({
     },
     scrollToEnd() {
       const wordList = this.$el.querySelector("#word-list");
-      console.log("Word list element : ", wordList)
       wordList.scrollTop = wordList.scrollHeight;
     },
     inputLetter(ch) {
@@ -111,6 +149,33 @@ const app = new Vue({
         this.input.addLetter(ch);
       }
     },
+    i18n(property) {
+      const lang = this.settings.language;
+      if (!property || typeof property != "string") {
+        console.warn("Wrong i18n parameter: " + property);
+        return property;
+      }
+      if (!(lang in Translations)) {
+        console.warn(`Missing language '${lang}'`);
+        return property;
+      }
+      const parts = property.split(".");
+      let result = Translations[lang];
+      for (let part of parts) {
+        if (result && part in result) {
+          result = result[part];
+        } else {
+          console.warn(`Missing property '${property}' for language '${lang}'`);
+          return property;
+        }
+      }
+      return result ? result : property;
+    },
+  },
+  computed: {
+    keyboard() {
+      return Keyboard[this.settings.keyboardLayout];
+    }
   },
   mounted: async function () {
     // Init dictionary
