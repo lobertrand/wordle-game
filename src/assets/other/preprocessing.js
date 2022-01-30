@@ -30,16 +30,21 @@ const cleanWord = (word) => {
 };
 
 // Reading input file
-const fs = require('fs');
+const fs = require("fs");
 const content = fs.readFileSync(inputPath).toString();
 
 // Cleaning words (selecting five letter words only)
-const words = content.split(/\r?\n/)
-  .map(w => cleanWord(w))
-  .filter(w => w.match(/^[A-Z]{5}$/));
+const words = content
+  .split(/\r?\n/)
+  .map((w) => cleanWord(w))
+  .filter((w) => w.match(/^[A-Z]{5}$/));
 const uniqueWords = [...new Set(words)];
-console.log(`${uniqueWords.length} unique words: ${uniqueWords.slice(0, 10).join(', ')}...`)
+console.log(
+  `${uniqueWords.length} unique words: ${uniqueWords
+    .slice(0, 10)
+    .join(", ")}...`
+);
 
 // Writing resulting words to disk
-const fileContent = uniqueWords.join('\n');
+const fileContent = uniqueWords.join("\n");
 fs.writeFileSync(outputPath, fileContent);
