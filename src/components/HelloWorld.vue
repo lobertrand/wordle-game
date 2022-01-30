@@ -149,11 +149,12 @@ import {
   Word,
   WORD_LENGTH,
   Translations,
-  isCapitalLetter,
-  randomElement,
-  Keyboard,
+  KEYBOARDS,
+  KeyboardLayout,
+  Language,
 } from "@/model/word";
 import { loadWords } from "@/services/WordsLoader";
+import { isCapitalLetter, randomElement } from "@/model/util";
 
 export default defineComponent({
   name: "HelloWorld",
@@ -166,8 +167,8 @@ export default defineComponent({
       badInput: false,
       settings: {
         open: false,
-        language: "en" as "en" | "fr",
-        keyboardLayout: "AZERTY" as "AZERTY" | "QWERTY",
+        language: "en" as Language,
+        keyboardLayout: "AZERTY" as KeyboardLayout,
       },
     });
 
@@ -196,7 +197,7 @@ export default defineComponent({
       }
       nextTick(scrollToEnd);
     };
-    
+
     const wordListElement = ref<HTMLElement | null>(null);
 
     const scrollToEnd = () => {
@@ -221,7 +222,7 @@ export default defineComponent({
         return property;
       }
       const parts = property.split(".");
-      let result = Translations[lang] as any;
+      let result: any = Translations[lang];
       for (let part of parts) {
         if (result && part in result) {
           result = result[part];
@@ -251,7 +252,7 @@ export default defineComponent({
     };
 
     const keyboard = computed(() => {
-      return (Keyboard as any)[state.settings.keyboardLayout];
+      return KEYBOARDS[state.settings.keyboardLayout];
     });
 
     const keyDownListener = (event: KeyboardEvent) => {

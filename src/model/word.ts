@@ -1,12 +1,6 @@
+import { isCapitalLetter } from "./util";
+
 export const WORD_LENGTH = 5;
-
-export const isCapitalLetter = (str: string): boolean =>
-  str.length === 1 && str >= "A" && str <= "Z";
-
-export const randomElement = function <T>(arr: T[]): T {
-  const index = Math.floor(Math.random() * arr.length);
-  return arr[index];
-};
 
 export const Translations = {
   en: {
@@ -34,11 +28,13 @@ export const Translations = {
     },
   },
 };
+export type Language = keyof typeof Translations;
 
-export const Keyboard = {
+export const KEYBOARDS = {
   AZERTY: ["AZERTYUIOP", "QSDFGHJKLM", "WXCVBN"],
   QWERTY: ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"],
-} as const;
+};
+export type KeyboardLayout = keyof typeof KEYBOARDS;
 
 export type Status = "ABSENT" | "WRONG_POSITION" | "RIGHT_POSITION";
 
@@ -59,7 +55,7 @@ export class Word {
     this.update(word);
   }
 
-  update(newWord: string) {
+  update(newWord: string): void {
     newWord = newWord.toUpperCase();
     const newLetters = [];
     for (let i = 0; i < WORD_LENGTH; i++) {
@@ -73,18 +69,18 @@ export class Word {
     this.letters = newLetters;
   }
 
-  get length() {
+  get length(): number {
     return this.word.replace(" ", "").length;
   }
 
-  addLetter(ch: string) {
+  addLetter(ch: string): void {
     if (this.word.length < WORD_LENGTH && isCapitalLetter(ch)) {
       const newWord = this.word + ch;
       this.update(newWord);
     }
   }
 
-  removeLastLetter() {
+  removeLastLetter(): void {
     if (this.word.length > 0) {
       const newWord = [...this.word].slice(0, this.word.length - 1).join("");
       this.update(newWord);
