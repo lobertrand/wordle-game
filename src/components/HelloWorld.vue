@@ -260,18 +260,15 @@ export default defineComponent({
     // Watchers
     watch(
       () => state.settings.language,
-      () => {
-        localStorage.setItem("userSettings.language", state.settings.language);
+      (newValue) => {
+        localStorage.setItem("userSettings.language", newValue);
         reloadWords();
       }
     );
     watch(
       () => state.settings.keyboardLayout,
-      () => {
-        localStorage.setItem(
-          "userSettings.keyboardLayout",
-          state.settings.keyboardLayout
-        );
+      (newValue) => {
+        localStorage.setItem("userSettings.keyboardLayout", newValue);
       }
     );
 
