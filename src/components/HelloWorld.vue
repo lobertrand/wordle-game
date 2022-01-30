@@ -57,6 +57,7 @@
         class="btn submit-btn"
         :title="i18n('game.submit')"
         v-on:click="submitWord()"
+        :disabled="input.length !== 5"
       >
         <span>{{ i18n("game.submit") }}</span>
         <img src="@/assets/icons/check.svg" aria-hidden="true" />
@@ -65,11 +66,15 @@
         class="btn erase-btn"
         :title="i18n('game.erase')"
         v-on:click="removeLastLetter()"
+        :disabled="input.length === 0"
       >
         <img src="@/assets/icons/backspace.svg" aria-hidden="true" />
       </button>
     </div>
   </div>
+
+  <!-- SETTINGS OVERLAY -->
+  <!-- TODO: Move to a new component -->
 
   <div class="settings-overlay" :class="settings.open ? 'open' : ''">
     <div class="settings-content">
@@ -145,20 +150,16 @@ import {
   toRefs,
   watchEffect,
 } from "vue";
-import {
-  Word,
-  WORD_LENGTH,
-  Translations,
-  KEYBOARDS,
-  KeyboardLayout,
-  Language,
-} from "@/model/word";
+
 import { loadWords } from "@/services/WordsLoader";
+import { Language, translate } from "@/services/Languages";
 import { isCapitalLetter, randomElement } from "@/model/util";
+import { Word, WORD_LENGTH, KEYBOARDS, KeyboardLayout } from "@/model/word";
 
 export default defineComponent({
   name: "HelloWorld",
   setup() {
+    // Variables
     const state = reactive({
       dictionary: new Set(),
       wordToGuess: "happy", // TODO: change default ?
@@ -171,11 +172,45 @@ export default defineComponent({
         keyboardLayout: "AZERTY" as KeyboardLayout,
       },
     });
+    const keyboard = computed(() => {
+      return KEYBOARDS[state.settings.keyboardLayout];
+    });
+    const wordListElement = ref<HTMLElement | null>(null);
 
+    // Life cycle
+    onMounted(async () => {
+      // Load user preferences
+      const language = localStorage.getItem("userSettings.language");
+      const keyboardLayout = localStorage.getItem(
+        "userSettings.keyboardLayout"
+      );
+      if (language === "en" || language === "fr") {
+        state.settings.language = language;
+      }
+      if (keyboardLayout === "AZERTY" || keyboardLayout === "QWERTY") {
+        state.settings.keyboardLayout = keyboardLayout;
+      }
+
+      // Init keyboard events
+      window.addEventListener("keydown", keyDownListener);
+    });
+    onUnmounted(() => {
+      window.removeEventListener("keydown", keyDownListener);
+    });
+
+    // Methods
+    const keyDownListener = (event: KeyboardEvent) => {
+      if (event.key === "Backspace") {
+        removeLastLetter();
+      } else if (event.key === "Enter") {
+        submitWord();
+      } else if (event.key.length === 1) {
+        inputLetter(event.key.toUpperCase());
+      }
+    };
     const removeLastLetter = () => {
       state.input.removeLastLetter();
     };
-
     const submitWord = () => {
       if (
         state.input.length === WORD_LENGTH &&
@@ -195,45 +230,19 @@ export default defineComponent({
         state.badInput = true;
         setTimeout(() => (state.badInput = false), 500);
       }
-      nextTick(scrollToEnd);
+      nextTick(() => {
+        if (wordListElement.value) {
+          wordListElement.value.scrollTop = wordListElement.value.scrollHeight;
+        }
+      });
     };
-
-    const wordListElement = ref<HTMLElement | null>(null);
-
-    const scrollToEnd = () => {
-      if (wordListElement.value) {
-        wordListElement.value.scrollTop = wordListElement.value.scrollHeight;
-      }
-    };
-
     const inputLetter = (ch: string) => {
       if (isCapitalLetter(ch)) {
         state.input.addLetter(ch);
       }
     };
-    const i18n = (property: string) => {
-      const lang = state.settings.language as keyof typeof Translations;
-      if (!property || typeof property != "string") {
-        console.warn("Wrong i18n parameter: " + property);
-        return property;
-      }
-      if (!(lang in Translations)) {
-        console.warn(`Missing language '${lang}'`);
-        return property;
-      }
-      const parts = property.split(".");
-      let result: any = Translations[lang];
-      for (let part of parts) {
-        if (result && part in result) {
-          result = result[part];
-        } else {
-          console.warn(`Missing property '${property}' for language '${lang}'`);
-          return property;
-        }
-      }
-      return result ? result : property;
-    };
-
+    const i18n = (property: string) =>
+      translate(property, state.settings.language);
     const reloadWords = async () => {
       if (!["fr", "en"].includes(state.settings.language)) {
         console.log(
@@ -251,47 +260,12 @@ export default defineComponent({
       state.input = new Word();
     };
 
-    const keyboard = computed(() => {
-      return KEYBOARDS[state.settings.keyboardLayout];
-    });
-
-    const keyDownListener = (event: KeyboardEvent) => {
-      if (event.key === "Backspace") {
-        removeLastLetter();
-      } else if (event.key === "Enter") {
-        submitWord();
-      } else if (event.key.length === 1) {
-        inputLetter(event.key.toUpperCase());
-      }
-    };
-
-    onMounted(async () => {
-      // Load user preferences
-      const language = localStorage.getItem("userSettings.language");
-      const keyboardLayout = localStorage.getItem(
-        "userSettings.keyboardLayout"
-      );
-      if (language === "en" || language === "fr") {
-        state.settings.language = language;
-      }
-      if (keyboardLayout === "AZERTY" || keyboardLayout === "QWERTY") {
-        state.settings.keyboardLayout = keyboardLayout;
-      }
-
-      // Init keyboard events
-      window.addEventListener("keydown", keyDownListener);
-    });
-
-    onUnmounted(() => {
-      window.removeEventListener("keydown", keyDownListener);
-    });
-
+    // Watchers
     watchEffect(() => {
       // Runs when component is mounted too
       localStorage.setItem("userSettings.language", state.settings.language);
       reloadWords();
     });
-
     watchEffect(() => {
       localStorage.setItem(
         "userSettings.keyboardLayout",

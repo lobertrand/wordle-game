@@ -169,10 +169,15 @@ body {
   user-select: none;
 }
 
-.btn:active {
+.btn:active:not(:disabled) {
   background-color: var(--default-pressed-color);
   transform: translateY(1px);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .btn img {

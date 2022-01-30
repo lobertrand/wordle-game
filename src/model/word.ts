@@ -2,34 +2,6 @@ import { isCapitalLetter } from "./util";
 
 export const WORD_LENGTH = 5;
 
-export const Translations = {
-  en: {
-    game: {
-      settings: "Settings",
-      submit: "Submit",
-      erase: "Erase",
-    },
-    settings: {
-      language: "Language",
-      keyboardLayout: "Keyboard layout",
-      close: "Close settings",
-    },
-  },
-  fr: {
-    game: {
-      settings: "Paramètres",
-      submit: "Envoyer",
-      erase: "Effacer",
-    },
-    settings: {
-      language: "Langue",
-      keyboardLayout: "Disposition du clavier",
-      close: "Fermer les paramètres",
-    },
-  },
-};
-export type Language = keyof typeof Translations;
-
 export const KEYBOARDS = {
   AZERTY: ["AZERTYUIOP", "QSDFGHJKLM", "WXCVBN"],
   QWERTY: ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"],
