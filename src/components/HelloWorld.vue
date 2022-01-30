@@ -148,7 +148,7 @@ import {
   reactive,
   ref,
   toRefs,
-  watchEffect,
+  watch,
 } from "vue";
 
 import { loadWords } from "@/services/WordsLoader";
@@ -190,6 +190,9 @@ export default defineComponent({
       if (keyboardLayout === "AZERTY" || keyboardLayout === "QWERTY") {
         state.settings.keyboardLayout = keyboardLayout;
       }
+
+      // Load words
+      reloadWords();
 
       // Init keyboard events
       window.addEventListener("keydown", keyDownListener);
@@ -255,17 +258,22 @@ export default defineComponent({
     };
 
     // Watchers
-    watchEffect(() => {
-      // Runs when component is mounted too
-      localStorage.setItem("userSettings.language", state.settings.language);
-      reloadWords();
-    });
-    watchEffect(() => {
-      localStorage.setItem(
-        "userSettings.keyboardLayout",
-        state.settings.keyboardLayout
-      );
-    });
+    watch(
+      () => state.settings.language,
+      () => {
+        localStorage.setItem("userSettings.language", state.settings.language);
+        reloadWords();
+      }
+    );
+    watch(
+      () => state.settings.keyboardLayout,
+      () => {
+        localStorage.setItem(
+          "userSettings.keyboardLayout",
+          state.settings.keyboardLayout
+        );
+      }
+    );
 
     return {
       ...toRefs(state),
