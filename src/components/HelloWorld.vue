@@ -244,12 +244,6 @@ export default defineComponent({
     const i18n = (property: string) =>
       translate(property, state.settings.language);
     const reloadWords = async () => {
-      if (!["fr", "en"].includes(state.settings.language)) {
-        console.log(
-          `Cannot load words for unsuported language: '${state.settings.language}'`
-        );
-        return;
-      }
       const words = await loadWords(state.settings.language);
       console.log(
         `${words.length} words loaded for language '${state.settings.language}'`
