@@ -1,10 +1,7 @@
 <template>
   <div class="word-list" id="word-list" ref="wordListElement">
     <div class="word" v-for="word in attemps" v-bind:key="word.word">
-      <span
-        class="letter-wrapper"
-        v-for="letter in word.letters"
-        :key="letter.value"
+      <span class="letter-wrapper" v-for="letter in word.letters" :key="letter"
         ><span
           class="letter"
           :class="
@@ -22,7 +19,7 @@
       <span
         class="letter-wrapper"
         v-for="letter in input.letters"
-        :key="letter.value"
+        :key="letter"
       >
         <span class="letter" :class="badInput ? 'bad-input' : ''">{{
           letter.value
@@ -142,111 +139,24 @@ import {
   defineComponent,
   nextTick,
   onMounted,
+  onUnmounted,
   reactive,
   ref,
   toRefs,
   watchEffect,
 } from "vue";
-
-const WORD_LENGTH = 5;
-
-const isCapitalLetter = (str: string): boolean =>
-  str.length === 1 && str >= "A" && str <= "Z";
-
-const randomElement = function <T>(arr: T[]): T {
-  const index = Math.floor(Math.random() * arr.length);
-  return arr[index];
-};
-
-const Translations = {
-  en: {
-    game: {
-      settings: "Settings",
-      submit: "Submit",
-      erase: "Erase",
-    },
-    settings: {
-      language: "Language",
-      keyboardLayout: "Keyboard layout",
-      close: "Close settings",
-    },
-  },
-  fr: {
-    game: {
-      settings: "Paramètres",
-      submit: "Envoyer",
-      erase: "Effacer",
-    },
-    settings: {
-      language: "Langue",
-      keyboardLayout: "Disposition du clavier",
-      close: "Fermer les paramètres",
-    },
-  },
-};
-
-const Keyboard = {
-  AZERTY: ["AZERTYUIOP", "QSDFGHJKLM", "WXCVBN"],
-  QWERTY: ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"],
-} as const;
-
-type Status = "ABSENT" | "WRONG_POSITION" | "RIGHT_POSITION";
-
-class Letter {
-  value: string;
-  status: Status;
-
-  constructor(value: string) {
-    this.value = value;
-    this.status = "ABSENT";
-  }
-}
-
-class Word {
-  word = "";
-  letters: Letter[] = [];
-  constructor(word = "") {
-    this.update(word);
-  }
-
-  update(newWord: string) {
-    newWord = newWord.toUpperCase();
-    const newLetters = [];
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      if (i < newWord.length) {
-        newLetters.push(new Letter(newWord[i]));
-      } else {
-        newLetters.push(new Letter(" "));
-      }
-    }
-    this.word = newWord;
-    this.letters = newLetters;
-  }
-
-  get length() {
-    return this.word.replace(" ", "").length;
-  }
-
-  addLetter(ch: string) {
-    if (this.word.length < WORD_LENGTH && isCapitalLetter(ch)) {
-      const newWord = this.word + ch;
-      this.update(newWord);
-    }
-  }
-
-  removeLastLetter() {
-    if (this.word.length > 0) {
-      const newWord = [...this.word].slice(0, this.word.length - 1).join("");
-      this.update(newWord);
-    }
-  }
-}
+import {
+  Word,
+  WORD_LENGTH,
+  Translations,
+  isCapitalLetter,
+  randomElement,
+  Keyboard,
+} from "@/model/word";
+import { loadWords } from "@/services/WordsLoader";
 
 export default defineComponent({
   name: "HelloWorld",
-  // props: {
-  //   msg: String,
-  // },
   setup() {
     const state = reactive({
       dictionary: new Set(),
@@ -256,8 +166,8 @@ export default defineComponent({
       badInput: false,
       settings: {
         open: false,
-        language: "en",
-        keyboardLayout: "AZERTY",
+        language: "en" as "en" | "fr",
+        keyboardLayout: "AZERTY" as "AZERTY" | "QWERTY",
       },
     });
 
@@ -286,12 +196,15 @@ export default defineComponent({
       }
       nextTick(scrollToEnd);
     };
+    
     const wordListElement = ref<HTMLElement | null>(null);
+
     const scrollToEnd = () => {
       if (wordListElement.value) {
         wordListElement.value.scrollTop = wordListElement.value.scrollHeight;
       }
     };
+
     const inputLetter = (ch: string) => {
       if (isCapitalLetter(ch)) {
         state.input.addLetter(ch);
@@ -319,6 +232,7 @@ export default defineComponent({
       }
       return result ? result : property;
     };
+
     const reloadWords = async () => {
       if (!["fr", "en"].includes(state.settings.language)) {
         console.log(
@@ -326,15 +240,11 @@ export default defineComponent({
         );
         return;
       }
-      const response = await fetch(
-        `./assets/data/words-${state.settings.language}-5.txt`
-      );
-      const text = await response.text();
-      const words = text.toUpperCase().split("\n");
-      state.dictionary = new Set(words);
+      const words = await loadWords(state.settings.language);
       console.log(
         `${words.length} words loaded for language '${state.settings.language}'`
       );
+      state.dictionary = new Set(words);
       state.wordToGuess = randomElement(words);
       state.attemps = [];
       state.input = new Word();
@@ -344,35 +254,39 @@ export default defineComponent({
       return (Keyboard as any)[state.settings.keyboardLayout];
     });
 
+    const keyDownListener = (event: KeyboardEvent) => {
+      if (event.key === "Backspace") {
+        removeLastLetter();
+      } else if (event.key === "Enter") {
+        submitWord();
+      } else if (event.key.length === 1) {
+        inputLetter(event.key.toUpperCase());
+      }
+    };
+
     onMounted(async () => {
       // Load user preferences
       const language = localStorage.getItem("userSettings.language");
       const keyboardLayout = localStorage.getItem(
         "userSettings.keyboardLayout"
       );
-      state.settings.language =
-        language && language in Translations ? language : "fr";
-      state.settings.keyboardLayout =
-        keyboardLayout && keyboardLayout in Keyboard
-          ? keyboardLayout
-          : "AZERTY";
-
-      // Init dictionary
-      await reloadWords();
+      if (language === "en" || language === "fr") {
+        state.settings.language = language;
+      }
+      if (keyboardLayout === "AZERTY" || keyboardLayout === "QWERTY") {
+        state.settings.keyboardLayout = keyboardLayout;
+      }
 
       // Init keyboard events
-      window.addEventListener("keydown", (event) => {
-        if (event.key === "Backspace") {
-          removeLastLetter();
-        } else if (event.key === "Enter") {
-          submitWord();
-        } else if (event.key.length === 1) {
-          inputLetter(event.key.toUpperCase());
-        }
-      });
+      window.addEventListener("keydown", keyDownListener);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener("keydown", keyDownListener);
     });
 
     watchEffect(() => {
+      // Runs when component is mounted too
       localStorage.setItem("userSettings.language", state.settings.language);
       reloadWords();
     });
