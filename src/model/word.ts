@@ -1,4 +1,4 @@
-import { isCapitalLetter } from "./util";
+import { uniqueId, isCapitalLetter } from "./util";
 
 export const WORD_LENGTH = 5;
 
@@ -11,6 +11,7 @@ export type KeyboardLayout = keyof typeof KEYBOARDS;
 export type Status = "ABSENT" | "WRONG_POSITION" | "RIGHT_POSITION";
 
 export class Letter {
+  id = uniqueId();
   value: string;
   status: Status;
 
@@ -21,6 +22,7 @@ export class Letter {
 }
 
 export class Word {
+  id = uniqueId();
   word = "";
   letters: Letter[] = [];
   constructor(word = "") {

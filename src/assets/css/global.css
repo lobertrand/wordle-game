@@ -204,22 +204,23 @@ body {
 
 .settings-overlay {
   display: none;
-}
-
-.settings-overlay.open {
-  display: flex;
-  position: fixed;
+  position: absolute;
   justify-content: center;
+  align-items: center;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   z-index: 1;
-  background-color: rgba(0, 0, 0, 0.8);
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.settings-overlay.open {
+  display: flex;
 }
 
 .settings-content {
-  height: 100%;
   width: 100%;
   max-width: var(--max-content-width);
   display: flex;
@@ -227,6 +228,10 @@ body {
   justify-content: center;
   gap: 36px;
   padding: 20px;
+  margin: 20px;
+  border-radius: 20px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+  background-color: var(--bg-color);
 }
 
 .settings-overlay .settings-section {

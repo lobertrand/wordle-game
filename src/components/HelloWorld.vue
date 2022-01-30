@@ -1,7 +1,10 @@
 <template>
   <div class="word-list" id="word-list" ref="wordListElement">
-    <div class="word" v-for="word in attemps" v-bind:key="word.word">
-      <span class="letter-wrapper" v-for="letter in word.letters" :key="letter"
+    <div class="word" v-for="word in attemps" v-bind:key="word.id">
+      <span
+        class="letter-wrapper"
+        v-for="letter in word.letters"
+        :key="letter.id"
         ><span
           class="letter"
           :class="
@@ -19,7 +22,7 @@
       <span
         class="letter-wrapper"
         v-for="letter in input.letters"
-        :key="letter"
+        :key="letter.id"
       >
         <span class="letter" :class="badInput ? 'bad-input' : ''">{{
           letter.value
@@ -37,9 +40,9 @@
       >
         <button
           class="btn"
-          v-for="keyboardKey in keyboardRow"
+          v-for="keyboardKey in [...keyboardRow]"
           :key="keyboardKey"
-          v-on:click="inputLetter(keyboardKey)"
+          @click="inputLetter(keyboardKey)"
         >
           {{ keyboardKey }}
         </button>
@@ -49,14 +52,14 @@
       <button
         class="btn settings-btn"
         :title="i18n('game.settings')"
-        v-on:click="settings.open = true"
+        @click="settings.open = true"
       >
         <img src="@/assets/icons/settings.svg" aria-hidden="true" />
       </button>
       <button
         class="btn submit-btn"
         :title="i18n('game.submit')"
-        v-on:click="submitWord()"
+        @click="submitWord()"
         :disabled="input.length !== 5"
       >
         <span>{{ i18n("game.submit") }}</span>
@@ -65,7 +68,7 @@
       <button
         class="btn erase-btn"
         :title="i18n('game.erase')"
-        v-on:click="removeLastLetter()"
+        @click="removeLastLetter()"
         :disabled="input.length === 0"
       >
         <img src="@/assets/icons/backspace.svg" aria-hidden="true" />
@@ -128,7 +131,7 @@
         <button
           class="btn"
           :title="i18n('settings.close')"
-          v-on:click="settings.open = false"
+          @click="settings.open = false"
         >
           <span>{{ i18n("settings.close") }}</span>
           <img src="@/assets/icons/close.svg" aria-hidden="true" />
