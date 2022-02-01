@@ -52,7 +52,7 @@
       <button
         class="btn settings-btn"
         :title="i18n('game.settings')"
-        @click="settingsOpen = true"
+        @click="settingsPanelOpen = true"
       >
         <img src="@/assets/icons/settings.svg" aria-hidden="true" />
       </button>
@@ -76,68 +76,19 @@
     </div>
   </div>
 
-  <!-- SETTINGS OVERLAY -->
-  <!-- TODO: Move to a new component -->
-
-  <div class="settings-overlay" :class="settingsOpen ? 'open' : ''">
-    <div class="settings-content">
-      <section class="settings-section">
-        <h2>{{ i18n("settings.language") }}</h2>
-        <div class="radio-btn">
-          <input
-            id="language-english"
-            type="radio"
-            name="language"
-            value="en"
-            v-model="userSettings.language"
-          />
-          <label for="language-english">English</label>
-        </div>
-        <div class="radio-btn">
-          <input
-            id="language-french"
-            type="radio"
-            name="language"
-            value="fr"
-            v-model="userSettings.language"
-          />
-          <label for="language-french">Français</label>
-        </div>
-      </section>
-      <section class="settings-section">
-        <h2>{{ i18n("settings.keyboardLayout") }}</h2>
-        <div class="radio-btn">
-          <input
-            id="keyboard-layout-qwerty"
-            type="radio"
-            name="keyboard-layout"
-            value="QWERTY"
-            v-model="userSettings.keyboardLayout"
-          />
-          <label for="keyboard-layout-qwerty">Qwerty</label>
-        </div>
-        <div class="radio-btn">
-          <input
-            id="keyboard-layout-azerty"
-            type="radio"
-            name="keyboard-layout"
-            value="AZERTY"
-            v-model="userSettings.keyboardLayout"
-          />
-          <label for="keyboard-layout-azerty">Azerty</label>
-        </div>
-      </section>
-      <section class="settings-section mt-lg">
+  <div class="settings-overlay" :class="settingsPanelOpen ? 'open' : ''">
+    <SettingsPanel>
+      <template v-slot:bottomSection>
         <button
           class="btn"
           :title="i18n('settings.close')"
-          @click="settingsOpen = false"
+          @click="settingsPanelOpen = false"
         >
           <span>{{ i18n("settings.close") }}</span>
           <img src="@/assets/icons/close.svg" aria-hidden="true" />
         </button>
-      </section>
-    </div>
+      </template>
+    </SettingsPanel>
   </div>
 </template>
 
@@ -156,17 +107,18 @@ import {
 import { loadWords } from "@/services/WordsLoader";
 import { i18n } from "@/services/Languages";
 import { isCapitalLetter, randomElement } from "@/model/util";
-import { Word, WORD_LENGTH, KEYBOARDS } from "@/model/word";
+import { Word, WORD_LENGTH, KEYBOARDS } from "@/model/model";
 import { userSettings } from "@/services/UserSettings";
+import SettingsPanel from "./SettingsPanel.vue";
 
 // Variables
 const state = reactive({
   input: new Word(),
   attemps: [] as Word[],
   badInput: false,
-  settingsOpen: false,
+  settingsPanelOpen: false,
 });
-const { input, attemps, badInput, settingsOpen } = toRefs(state);
+const { input, attemps, badInput, settingsPanelOpen } = toRefs(state);
 const keyboard = computed(() => KEYBOARDS[userSettings.keyboardLayout]);
 const wordListElement = ref<HTMLElement | null>(null);
 
@@ -175,7 +127,6 @@ let wordToGuess = "happy"; // TODO: change default ?
 
 // Life cycle
 onMounted(async () => {
-  // Load user preferences
   const language = localStorage.getItem("userSettings.language");
   const keyboardLayout = localStorage.getItem("userSettings.keyboardLayout");
   if (language === "en" || language === "fr") {
@@ -184,13 +135,13 @@ onMounted(async () => {
   if (keyboardLayout === "AZERTY" || keyboardLayout === "QWERTY") {
     userSettings.keyboardLayout = keyboardLayout;
   }
-
-  // Load words
   reloadWords();
-
-  // Init keyboard events
   window.addEventListener("keydown", keyDownListener);
 });
+watch(
+  () => userSettings.language,
+  () => reloadWords()
+);
 onUnmounted(() => {
   window.removeEventListener("keydown", keyDownListener);
 });
@@ -245,11 +196,6 @@ const reloadWords = async () => {
   state.attemps = [];
   state.input = new Word();
 };
-
-watch(
-  () => userSettings.language,
-  () => reloadWords()
-);
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

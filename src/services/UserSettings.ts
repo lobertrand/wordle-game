@@ -1,5 +1,5 @@
 import { reactive, watch } from "vue";
-import { KeyboardLayout } from "@/model/word";
+import { KeyboardLayout } from "@/model/model";
 import { Language } from "./Languages";
 
 export const userSettings = reactive({
