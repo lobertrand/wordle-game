@@ -52,7 +52,7 @@
       <button
         class="btn settings-btn"
         :title="i18n('game.settings')"
-        @click="settings.open = true"
+        @click="settingsOpen = true"
       >
         <img src="@/assets/icons/settings.svg" aria-hidden="true" />
       </button>
@@ -79,7 +79,7 @@
   <!-- SETTINGS OVERLAY -->
   <!-- TODO: Move to a new component -->
 
-  <div class="settings-overlay" :class="settings.open ? 'open' : ''">
+  <div class="settings-overlay" :class="settingsOpen ? 'open' : ''">
     <div class="settings-content">
       <section class="settings-section">
         <h2>{{ i18n("settings.language") }}</h2>
@@ -89,7 +89,7 @@
             type="radio"
             name="language"
             value="en"
-            v-model="settings.language"
+            v-model="userSettings.language"
           />
           <label for="language-english">English</label>
         </div>
@@ -99,7 +99,7 @@
             type="radio"
             name="language"
             value="fr"
-            v-model="settings.language"
+            v-model="userSettings.language"
           />
           <label for="language-french">Français</label>
         </div>
@@ -112,7 +112,7 @@
             type="radio"
             name="keyboard-layout"
             value="QWERTY"
-            v-model="settings.keyboardLayout"
+            v-model="userSettings.keyboardLayout"
           />
           <label for="keyboard-layout-qwerty">Qwerty</label>
         </div>
@@ -122,7 +122,7 @@
             type="radio"
             name="keyboard-layout"
             value="AZERTY"
-            v-model="settings.keyboardLayout"
+            v-model="userSettings.keyboardLayout"
           />
           <label for="keyboard-layout-azerty">Azerty</label>
         </div>
@@ -131,7 +131,7 @@
         <button
           class="btn"
           :title="i18n('settings.close')"
-          @click="settings.open = false"
+          @click="settingsOpen = false"
         >
           <span>{{ i18n("settings.close") }}</span>
           <img src="@/assets/icons/close.svg" aria-hidden="true" />
@@ -141,10 +141,9 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
   computed,
-  defineComponent,
   nextTick,
   onMounted,
   onUnmounted,
@@ -155,137 +154,102 @@ import {
 } from "vue";
 
 import { loadWords } from "@/services/WordsLoader";
-import { Language, translate } from "@/services/Languages";
+import { i18n } from "@/services/Languages";
 import { isCapitalLetter, randomElement } from "@/model/util";
-import { Word, WORD_LENGTH, KEYBOARDS, KeyboardLayout } from "@/model/word";
+import { Word, WORD_LENGTH, KEYBOARDS } from "@/model/word";
+import { userSettings } from "@/services/UserSettings";
 
-export default defineComponent({
-  name: "HelloWorld",
-  setup() {
-    // Variables
-    const state = reactive({
-      dictionary: new Set(),
-      wordToGuess: "happy", // TODO: change default ?
-      input: new Word(),
-      attemps: [] as Word[],
-      badInput: false,
-      settings: {
-        open: false,
-        language: "en" as Language,
-        keyboardLayout: "AZERTY" as KeyboardLayout,
-      },
-    });
-    const keyboard = computed(() => {
-      return KEYBOARDS[state.settings.keyboardLayout];
-    });
-    const wordListElement = ref<HTMLElement | null>(null);
-
-    // Life cycle
-    onMounted(async () => {
-      // Load user preferences
-      const language = localStorage.getItem("userSettings.language");
-      const keyboardLayout = localStorage.getItem(
-        "userSettings.keyboardLayout"
-      );
-      if (language === "en" || language === "fr") {
-        state.settings.language = language;
-      }
-      if (keyboardLayout === "AZERTY" || keyboardLayout === "QWERTY") {
-        state.settings.keyboardLayout = keyboardLayout;
-      }
-
-      // Load words
-      reloadWords();
-
-      // Init keyboard events
-      window.addEventListener("keydown", keyDownListener);
-    });
-    onUnmounted(() => {
-      window.removeEventListener("keydown", keyDownListener);
-    });
-
-    // Methods
-    const keyDownListener = (event: KeyboardEvent) => {
-      if (event.key === "Backspace") {
-        removeLastLetter();
-      } else if (event.key === "Enter") {
-        submitWord();
-      } else if (event.key.length === 1) {
-        inputLetter(event.key.toUpperCase());
-      }
-    };
-    const removeLastLetter = () => {
-      state.input.removeLastLetter();
-    };
-    const submitWord = () => {
-      if (
-        state.input.length === WORD_LENGTH &&
-        state.dictionary.has(state.input.word)
-      ) {
-        for (let i = 0; i < WORD_LENGTH; i++) {
-          state.input.letters[i].status =
-            state.input.word[i] === state.wordToGuess.charAt(i)
-              ? "RIGHT_POSITION"
-              : state.wordToGuess.includes(state.input.word[i])
-              ? "WRONG_POSITION"
-              : "ABSENT";
-        }
-        state.attemps.push(state.input);
-        state.input = new Word();
-      } else {
-        state.badInput = true;
-        setTimeout(() => (state.badInput = false), 500);
-      }
-      nextTick(() => {
-        if (wordListElement.value) {
-          wordListElement.value.scrollTop = wordListElement.value.scrollHeight;
-        }
-      });
-    };
-    const inputLetter = (ch: string) => {
-      if (isCapitalLetter(ch)) {
-        state.input.addLetter(ch);
-      }
-    };
-    const i18n = (property: string) =>
-      translate(property, state.settings.language);
-    const reloadWords = async () => {
-      const words = await loadWords(state.settings.language);
-      console.log(
-        `${words.length} words loaded for language '${state.settings.language}'`
-      );
-      state.dictionary = new Set(words);
-      state.wordToGuess = randomElement(words);
-      state.attemps = [];
-      state.input = new Word();
-    };
-
-    // Watchers
-    watch(
-      () => state.settings.language,
-      (newValue) => {
-        localStorage.setItem("userSettings.language", newValue);
-        reloadWords();
-      }
-    );
-    watch(
-      () => state.settings.keyboardLayout,
-      (newValue) => {
-        localStorage.setItem("userSettings.keyboardLayout", newValue);
-      }
-    );
-
-    return {
-      ...toRefs(state),
-      wordListElement,
-      keyboard,
-      removeLastLetter,
-      submitWord,
-      inputLetter,
-      i18n,
-    };
-  },
+// Variables
+const state = reactive({
+  input: new Word(),
+  attemps: [] as Word[],
+  badInput: false,
+  settingsOpen: false,
 });
+const { input, attemps, badInput, settingsOpen } = toRefs(state);
+const keyboard = computed(() => KEYBOARDS[userSettings.keyboardLayout]);
+const wordListElement = ref<HTMLElement | null>(null);
+
+let dictionary = new Set();
+let wordToGuess = "happy"; // TODO: change default ?
+
+// Life cycle
+onMounted(async () => {
+  // Load user preferences
+  const language = localStorage.getItem("userSettings.language");
+  const keyboardLayout = localStorage.getItem("userSettings.keyboardLayout");
+  if (language === "en" || language === "fr") {
+    userSettings.language = language;
+  }
+  if (keyboardLayout === "AZERTY" || keyboardLayout === "QWERTY") {
+    userSettings.keyboardLayout = keyboardLayout;
+  }
+
+  // Load words
+  reloadWords();
+
+  // Init keyboard events
+  window.addEventListener("keydown", keyDownListener);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", keyDownListener);
+});
+
+// Methods
+const keyDownListener = (event: KeyboardEvent) => {
+  if (event.key === "Backspace") {
+    removeLastLetter();
+  } else if (event.key === "Enter") {
+    submitWord();
+  } else if (event.key.length === 1) {
+    inputLetter(event.key.toUpperCase());
+  }
+};
+const removeLastLetter = () => {
+  state.input.removeLastLetter();
+};
+const submitWord = () => {
+  if (state.input.length === WORD_LENGTH && dictionary.has(state.input.word)) {
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      state.input.letters[i].status =
+        state.input.word[i] === wordToGuess.charAt(i)
+          ? "RIGHT_POSITION"
+          : wordToGuess.includes(state.input.word[i])
+          ? "WRONG_POSITION"
+          : "ABSENT";
+    }
+    state.attemps.push(state.input);
+    state.input = new Word();
+  } else {
+    state.badInput = true;
+    setTimeout(() => (state.badInput = false), 500);
+  }
+  nextTick(() => {
+    if (wordListElement.value) {
+      wordListElement.value.scrollTop = wordListElement.value.scrollHeight;
+    }
+  });
+};
+const inputLetter = (ch: string) => {
+  if (isCapitalLetter(ch)) {
+    state.input.addLetter(ch);
+  }
+};
+const reloadWords = async () => {
+  const words = await loadWords(userSettings.language);
+  console.log(
+    `${words.length} words loaded for language '${userSettings.language}'`
+  );
+  dictionary = new Set(words);
+  wordToGuess = randomElement(words);
+  state.attemps = [];
+  state.input = new Word();
+};
+
+watch(
+  () => userSettings.language,
+  () => reloadWords()
+);
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

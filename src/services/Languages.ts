@@ -1,3 +1,5 @@
+import { userSettings } from "./UserSettings";
+
 export const TRANSLATIONS = {
   en: {
     game: {
@@ -26,7 +28,8 @@ export const TRANSLATIONS = {
 };
 export type Language = keyof typeof TRANSLATIONS;
 
-export const translate = (property: string, lang: Language): string => {
+export const i18n = (property: string): string => {
+  const lang = userSettings.language;
   if (!property || typeof property != "string") {
     console.warn("Wrong i18n parameter: " + property);
     return property;
